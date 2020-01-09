@@ -1,0 +1,61 @@
+#include "NXCDefs.h"
+#define BOUND 50
+#define PWD 50
+
+// Para este proyecto necesitamos 2 sensores de luz
+// IN_1
+
+int ultimo = 0;
+int dentro = 0;
+
+// Último indica el último sensor que detectó la línea
+// Si vale 0: el último sensor fue el izquierdo
+// Si vale 1: el último sensor fue el derecho
+
+void gira_izq()
+{
+    OnFwd(OUT_C, PWD);
+    OnRev(OUT_B, PWD - 25);
+}
+void gira_der()
+{
+    OnFwd(OUT_B, PWD);
+    OnRev(OUT_C, PWD - 25);
+}
+void avanza()
+{
+    OnFwd(OUT_BC, PWD);
+}
+
+task sensores()
+{
+    SetSensorLight(IN_1);
+    SetSensorLight(IN_2);
+    while (1)
+    {
+        if (Sensor(IN_1) < BOUND)
+            ultimo = 0;
+        else if (Sensor(IN_2) < BOUND)
+            ultimo = 1;
+        if (Sensor(IN_1) > BOUND && Sensor(IN_2) > BOUND)
+            dentro = 0;
+        else
+            dentro = 1;
+    }
+}
+task main()
+{
+    start sensores;
+    while (1)
+    {
+        if (dentro == 0)
+        {
+            if (ultimo == 0)
+                gira_izq();
+            else
+                gira_der();
+        }
+        else
+            avanza();
+    }
+}

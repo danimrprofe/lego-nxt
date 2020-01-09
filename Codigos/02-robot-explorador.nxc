@@ -1,0 +1,14 @@
+// OUT_B: motor izquierdo
+// OUT_C: motor derecho
+// IN_4: sensor ultrasónico
+
+#include “NXCDefs.h”
+task main(){
+    SetSensorLowspeed(IN_4);
+    while(true){
+        if( SensorUS(IN_4)>40)
+            OnFwd(OUT_BC, 75);
+        else
+        OnRev(OUT_B,75);
+    }
+}

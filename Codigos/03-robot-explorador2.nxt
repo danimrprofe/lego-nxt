@@ -1,0 +1,19 @@
+#include “NXCDefs.h”
+task main()
+{
+    SetSensorLowspeed(IN_4);
+    while (true)
+    {
+        if (SensorUS(IN_4) > 40)
+        {
+            OnFwd(OUT_BC, 75);
+        }
+        else
+        {
+            OnRev(OUT_BC, 75);
+            Wait(200);
+            while (SensorUS(IN_4) < 40)
+                OnRev(OUT_B, 75);
+        }
+    }
+}

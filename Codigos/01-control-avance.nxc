@@ -1,0 +1,6 @@
+#include "NXCDefs.h"
+task main(){
+    OnFwd( OUT_BC, 75 );
+    Wait( 3000 );
+    Off( OUT_BC );
+}

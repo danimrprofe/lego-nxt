@@ -1,0 +1,27 @@
+#include “NXCDefs.h”
+#define PW 50
+#define THR 50
+
+// PW: Fuerza de los motores
+// IN_1: Sensor infrarrojo
+
+void avanza()
+{
+    OnFwd(OUT_BC, PW);
+}
+void girar_izq()
+{
+    OnFwd(OUT_C, PW);
+    OnRev(OUT_B, PW);
+}
+task main()
+{
+    SetSensorLight(IN_1);
+    while (true)
+    {
+        if (Sensor(IN_1) > THR)
+            girar_izq();
+        else
+            avanza();
+    }
+}
