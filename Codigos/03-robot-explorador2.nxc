@@ -1,3 +1,7 @@
+// OUT_B: motor izquierdo
+// OUT_C: motor derecho
+// IN_4: sensor ultrasónico
+
 #include “NXCDefs.h”
 task main()
 {
