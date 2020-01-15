@@ -1,0 +1,73 @@
+// A continuación la definición de las constantes:
+// ALTO: Indica el umbral donde un sonido se considerará con los decibelios suficientes para considerarse un aplauso.
+// PWR: Potencia de los motores.
+// ESPERA: Tiempo de espera para el siguiente aplauso.
+
+#include "NXCDefs.h"
+#define ALTO 95
+#define PWR 50
+#define ESPERA 600
+
+int senal;
+void avanzar()
+{
+    OnFwd(OUT_BC, PWR)
+}
+void detener()
+{
+    Off(OUT BC);
+}
+
+/*Esta parte del código contiene a la tarea (task) sonido, la cual se dedicará exclusivamente a detectar y contar los aplausos que capte el robot.
+La función que tiene la variable alto, es la de identificar el sonido que entra al sensor. Cuando el sonido es considerablemente alto en decibelios, puede asumirse que se presentó un aplauso, entonces alto vale I.
+Una vez que alto vale 1, entonces se espera (en este programa 600 milisegundos) a que el sonido desaparezca. Cuando esto sucede, se incrementa señal, para contar otro aplauso. Entonces alto regresa a un valor de 0 para esperar que se presente otro nuevo aplauso.
+*/
+
+task sonido()
+{
+    int alto = 0;
+    SetSensorSound(IN_2);
+    while (true)
+    {
+        if (Sensor(IN_2) > ALTO)
+        {
+            alto = 1;
+        }
+        else if (alto == 1)
+        {
+            senal++;
+            alto = 0;
+        }
+        NumOut(0, 0, senal, false)
+    }
+}
+
+/*
+Dentro de la instrucción while se analiza si se ha presentado un aplauso (señal=l).
+Si es el caso, entonces espera para ver si se presenta otro aplauso. 
+Si realmente este fuera el caso entonces se han presentado dos o más aplausos 
+por lo que el robot se detiene, si no se daría por válido que solo se presentó un 
+aplauso, por lo que el robot avanza.
+*/
+task main()
+{
+    start sonido;
+    senal = 0;
+    while (true)
+    {
+        if (senal == l)
+        {
+            Wait(ESPERA);
+            if (senal > 1)
+            {
+                detener();
+                senal = 0;
+            }
+            else
+            {
+            }
+        }
+        avanzar();
+        senal = 0;
+    }
+}
